@@ -1,0 +1,41 @@
+<div class="dropdown-container">
+  <button (click)="toggleDropdown()">
+    {{ dropdownLabel }}
+  </button>
+
+  <div class="dropdown-list" *ngIf="isOpen">
+    <div class="select-all" (click)="toggleSelectAll()">
+      {{ hasAnySelection() ? 'Снять выделение' : 'Выбрать всё' }}
+    </div>
+
+    <!-- Воронки -->
+    <div *ngFor="let funnel of funnels" class="funnel">
+      <div class="funnel-header" (click)="toggleFunnel(funnel)">
+        <input
+          type="checkbox"
+          [checked]="isFunnelSelected(funnel)"
+          (change)="toggleFunnelSelection(funnel)"
+          (click)="$event.stopPropagation()"
+        />
+        <span>{{ funnel.name }}</span>
+      </div>
+
+      <ul *ngIf="funnel.expanded">
+        <li *ngFor="let stage of funnel.stages" [style.backgroundColor]="stage.color" >
+          <label>
+            <input
+              type="checkbox"
+              [checked]="isSelected(funnel.name, stage.name)"
+              (change)="
+                isSelected(funnel.name, stage.name)
+                  ? removeSelection(funnel.name, stage.name)
+                  : addSelection(funnel.name, stage.name)
+              "
+            />
+            {{ stage.name }}
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
